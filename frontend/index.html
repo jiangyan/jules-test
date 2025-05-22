@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo Calendar</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Todo Calendar</h1>
+
+    <div class="container">
+        <div class="calendar-container">
+            <h2>Calendar</h2>
+            <div id="calendar">
+                <!-- Calendar will be generated here -->
+                <p>Select a month and year:</p>
+                <input type="month" id="month-year-picker" value=""> 
+                <div id="calendar-grid"></div>
+            </div>
+        </div>
+
+        <div class="todo-container">
+            <h2>Todos for <span id="selected-date-display">N/A</span></h2>
+            <ul id="todo-list">
+                <!-- Todo items will be listed here -->
+            </ul>
+            <div class="add-todo">
+                <h3>Add New Todo</h3>
+                <input type="text" id="todo-description" placeholder="Todo description">
+                <button id="add-todo-btn">Add Todo</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "name": "todo-calendar-frontend",
+  "version": "1.0.0",
+  "description": "Frontend for the Todo Calendar App",
+  "main": "index.html",
+  "scripts": {
+    "start": "echo \"Open index.html in your browser or use a simple HTTP server.\""
+  },
+  "author": "",
+  "license": "ISC"
+}
