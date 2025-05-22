@@ -11,10 +11,12 @@ app = FastAPI()
 # CORS Middleware
 origins = [
     "http://localhost",
-    "http://localhost:8080",
+    "http://localhost:8080", # Kept for general local server
     "http://127.0.0.1",
-    "http://127.0.0.1:8080",
-    "null" 
+    "http://127.0.0.1:8080", # Kept for general local server
+    "http://127.0.0.1:5500", # Added for user's specific frontend origin
+    "http://localhost:5500",   # Added for user's specific frontend origin (alternative)
+    "null" # To allow requests from `file:///` URLs
 ]
 
 app.add_middleware(
