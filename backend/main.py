@@ -10,19 +10,19 @@ app = FastAPI()
 
 # CORS Middleware
 origins = [
-    "http://localhost", # For local development if frontend is served by a local server
-    "http://localhost:8080", # Example port if using something like live-server
+    "http://localhost",
+    "http://localhost:8080",
     "http://127.0.0.1",
     "http://127.0.0.1:8080",
-    "null" # To allow requests from `file:///` URLs (opening index.html directly)
+    "null" 
 ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"], # Allow all methods (GET, POST, PUT, DELETE, etc.)
-    allow_headers=["*"], # Allow all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Pydantic model for Todo items
@@ -37,11 +37,8 @@ class Todo(BaseModel): # For output, id is included
     description: str
     completed: bool = False
 
-async def get_db_connection():
-    return await aiosqlite.connect(DATABASE_FILE)
-
 async def create_db_and_tables():
-    async with await get_db_connection() as db:
+    async with aiosqlite.connect(DATABASE_FILE) as db: # MODIFIED
         await db.execute("""
         CREATE TABLE IF NOT EXISTS todos (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -64,8 +61,8 @@ async def root():
 
 @app.post("/todos/", response_model=Todo)
 async def create_todo(todo_in: TodoIn):
-    async with await get_db_connection() as db:
-        db.row_factory = aiosqlite.Row # To access columns by name
+    async with aiosqlite.connect(DATABASE_FILE) as db: # MODIFIED
+        db.row_factory = aiosqlite.Row 
         cursor = await db.execute(
             "INSERT INTO todos (date, description, completed) VALUES (?, ?, ?)",
             (todo_in.date, todo_in.description, 1 if todo_in.completed else 0)
@@ -77,13 +74,13 @@ async def create_todo(todo_in: TodoIn):
             created_todo_row = await cursor_select.fetchone()
             if created_todo_row:
                  return Todo(id=created_todo_row['id'], date=created_todo_row['date'], description=created_todo_row['description'], completed=bool(created_todo_row['completed']))
-            else: # Should not happen if insert was successful
+            else: 
                 raise HTTPException(status_code=500, detail="Failed to retrieve created todo")
 
 
 @app.get("/todos/{date}", response_model=List[Todo])
 async def get_todos_by_date(date: str):
-    async with await get_db_connection() as db:
+    async with aiosqlite.connect(DATABASE_FILE) as db: # MODIFIED
         db.row_factory = aiosqlite.Row
         async with db.execute("SELECT id, date, description, completed FROM todos WHERE date = ?", (date,)) as cursor:
             rows = await cursor.fetchall()
@@ -91,7 +88,7 @@ async def get_todos_by_date(date: str):
 
 @app.put("/todos/{todo_id}", response_model=Todo)
 async def update_todo(todo_id: int, todo_in: TodoIn):
-    async with await get_db_connection() as db:
+    async with aiosqlite.connect(DATABASE_FILE) as db: # MODIFIED
         db.row_factory = aiosqlite.Row
         # Check if todo exists
         async with db.execute("SELECT id FROM todos WHERE id = ?", (todo_id,)) as cursor_check:
@@ -107,15 +104,15 @@ async def update_todo(todo_id: int, todo_in: TodoIn):
         # Fetch the updated todo to return it
         async with db.execute("SELECT id, date, description, completed FROM todos WHERE id = ?", (todo_id,)) as cursor_select:
             updated_todo_row = await cursor_select.fetchone()
-            if updated_todo_row: # Should always find it if update was on existing ID
+            if updated_todo_row: 
                  return Todo(id=updated_todo_row['id'], date=updated_todo_row['date'], description=updated_todo_row['description'], completed=bool(updated_todo_row['completed']))
-            else: # Should not happen
+            else: 
                 raise HTTPException(status_code=500, detail="Failed to retrieve updated todo")
 
 
 @app.delete("/todos/{todo_id}")
 async def delete_todo(todo_id: int):
-    async with await get_db_connection() as db:
+    async with aiosqlite.connect(DATABASE_FILE) as db: # MODIFIED
         # Check if todo exists
         async with db.execute("SELECT id FROM todos WHERE id = ?", (todo_id,)) as cursor_check:
             existing_todo = await cursor_check.fetchone()
