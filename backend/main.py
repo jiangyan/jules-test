@@ -59,6 +59,25 @@ async def startup_event():
 async def root():
     return {"message": "Hello from FastAPI Todo Backend"}
 
+@app.get("/todos/dates_with_todos/{year}/{month}", response_model=List[str])
+async def get_dates_with_todos(year: int, month: int):
+    # Ensure month is two digits (e.g., 01, 02, ..., 12)
+    month_str = f"{month:02d}"
+    date_pattern = f"{year}-{month_str}-%" # SQL LIKE pattern for YYYY-MM-DD
+    
+    dates_with_todos = []
+    async with aiosqlite.connect(DATABASE_FILE) as db:
+        db.row_factory = lambda cursor, row: row[0] # To get just the date string
+        async with db.execute(
+            "SELECT DISTINCT date FROM todos WHERE date LIKE ?", 
+            (date_pattern,)
+        ) as cursor:
+            dates_with_todos = await cursor.fetchall()
+            
+    if dates_with_todos is None: # Should return empty list if no rows, but defensive
+        return []
+    return dates_with_todos
+
 # CRUD operations
 
 @app.post("/todos/", response_model=Todo)

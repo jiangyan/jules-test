@@ -1,101 +1,271 @@
+/* General Reset / Base */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 body {
-    font-family: sans-serif;
-    margin: 20px;
-    background-color: #f4f4f4;
-    color: #333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    background-color: #f8f9fa; /* Lighter grey background */
+    color: #343a40; /* Darker text for better contrast */
+    padding: 20px;
+    display: flex;
+    justify-content: center; /* Center main content */
+}
+
+.app-container { /* New wrapper for the whole app for centering */
+    width: 100%;
+    max-width: 1200px; /* Max width for larger screens */
+    background-color: #ffffff; /* White background for the app itself */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Softer shadow */
+}
+
+
+h1, h2, h3 {
+    margin-bottom: 0.75em;
+    color: #0056b3; /* Primary color for headers */
+}
+
+h1 {
+    text-align: center;
+    font-size: 2.5em;
+    margin-bottom: 1em;
+    color: #004085; /* Slightly darker primary for main title */
+}
+
+h2 {
+    font-size: 1.75em;
+    border-bottom: 2px solid #e9ecef; /* Light underline for section headers */
+    padding-bottom: 0.3em;
+}
+
+h3 {
+    font-size: 1.25em;
+    color: #0056b3;
 }
 
 .container {
     display: flex;
-    gap: 20px;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    gap: 30px; /* Increased gap */
 }
 
 .calendar-container, .todo-container {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    background-color: #fdfdff; /* Slightly off-white for sections */
+    padding: 25px; /* Increased padding */
+    border-radius: 6px; /* Slightly smaller radius */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07); /* Subtle shadow for sections */
+    border: 1px solid #e9ecef; /* Light border */
 }
 
 .calendar-container {
-    flex: 2;
+    flex: 3; /* Give calendar more space */
+    min-width: 400px; /* Minimum width for calendar */
 }
 
 .todo-container {
-    flex: 1;
+    flex: 2; /* Todo list takes less space */
+    min-width: 300px; /* Minimum width for todos */
 }
+
+/* Calendar Specifics */
+#month-year-picker {
+    display: block;
+    margin: 0 auto 20px auto; /* Center picker */
+    padding: 10px 15px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 1.1em;
+    cursor: pointer;
+}
+#month-year-picker:focus {
+    outline: none;
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
 
 #calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
-    margin-top: 10px;
+    gap: 8px; /* Increased gap */
+    margin-top: 15px;
 }
 
-.calendar-header div, .calendar-day {
-    padding: 10px;
+.calendar-header div {
+    font-weight: bold;
     text-align: center;
-    border: 1px solid #ddd;
-    background-color: #efefef;
+    padding: 10px;
+    color: #495057; /* Grey for day names */
+    background-color: #e9ecef; /* Light background for header */
+    border-radius: 4px;
 }
 
 .calendar-day {
+    padding: 12px 8px; /* Adjusted padding */
+    text-align: center;
+    border: 1px solid #dee2e6; /* Lighter border */
+    background-color: #fff;
+    border-radius: 4px; /* Rounded corners for days */
     cursor: pointer;
-    min-height: 40px; /* Ensure clickable area */
+    transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    min-height: 60px; /* Increased min-height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95em;
 }
 
 .calendar-day:hover {
-    background-color: #e0e0e0;
+    background-color: #e9ecef; /* Hover effect */
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
 }
 
 .calendar-day.selected {
-    background-color: #007bff;
+    background-color: #007bff; /* Primary color for selected */
     color: white;
+    font-weight: bold;
+    box-shadow: 0 0 8px rgba(0,123,255,.5);
+}
+.calendar-day.selected:hover {
+    background-color: #0056b3; /* Darker on hover when selected */
+}
+
+.date-has-todos {
+    position: relative;
+}
+
+.date-has-todos::after { /* Dot marker for dates with todos */
+    content: '';
+    position: absolute;
+    bottom: 6px; 
+    left: 50%;
+    transform: translateX(-50%);
+    width: 7px; 
+    height: 7px; 
+    background-color: #28a745; /* Green for todo marker */
+    border-radius: 50%;
+    box-shadow: 0 0 3px #1c7430;
+}
+.calendar-day.selected.date-has-todos::after {
+    background-color: #ffffff; /* White dot if selected */
+    box-shadow: 0 0 3px #dddddd;
+}
+
+
+/* Todo List Specifics */
+#selected-date-display {
+    color: #007bff;
+    font-weight: bold;
 }
 
 #todo-list {
     list-style-type: none;
     padding: 0;
+    margin-top: 15px;
 }
 
 #todo-list li {
-    padding: 10px;
-    border-bottom: 1px solid #eee;
+    padding: 12px 10px; /* Increased padding */
+    border-bottom: 1px solid #e9ecef; /* Lighter separator */
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: background-color 0.2s;
+    word-break: break-word; /* Prevent long words from overflowing badly */
 }
-
+#todo-list li:nth-child(odd) {
+    background-color: #f8f9fa; /* Subtle stripe for odd items */
+}
 #todo-list li:last-child {
     border-bottom: none;
 }
+#todo-list li:hover {
+    background-color: #e9ecef;
+}
+
 
 #todo-list li button {
-    margin-left: 5px;
-    padding: 3px 6px;
-    cursor: pointer;
-}
-
-.add-todo input[type="text"] {
-    padding: 8px;
-    margin-right: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-.add-todo button {
-    padding: 8px 15px;
-    background-color: #28a745;
-    color: white;
+    margin-left: 8px; /* Increased margin */
+    padding: 6px 10px; /* Adjusted padding */
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s, opacity 0.2s;
 }
 
+/* Add Todo Section */
+.add-todo {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #e9ecef;
+}
+
+.add-todo input[type="text"] {
+    width: calc(100% - 120px); /* Adjust width considering button */
+    padding: 12px 15px; /* Increased padding */
+    margin-right: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 1em;
+}
+.add-todo input[type="text"]:focus {
+    outline: none;
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
+
+.add-todo button, #todo-list li button { /* Shared button base */
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.95em;
+    transition: background-color 0.2s, transform 0.1s;
+    color: white;
+}
+.add-todo button:hover, #todo-list li button:hover {
+    opacity: 0.85;
+    transform: translateY(-1px); /* Slight lift on hover */
+}
+
+.add-todo button { /* Specific for the main "Add Todo" button */
+    background-color: #28a745; /* Green */
+    width: 100px; /* Fixed width */
+}
 .add-todo button:hover {
     background-color: #218838;
 }
 
-.complete-btn { background-color: #ffc107; color: black; border: none; border-radius: 3px;}
-.incomplete-btn { background-color: #17a2b8; color: white; border: none; border-radius: 3px;}
-.delete-btn { background-color: #dc3545; color: white; border: none; border-radius: 3px;}
+
+/* Button Styles within Todo List */
+.complete-btn { background-color: #ffc107; color: #212529;} /* Yellow, dark text */
+.complete-btn:hover { background-color: #e0a800; }
+
+.incomplete-btn { background-color: #17a2b8; } /* Teal */
+.incomplete-btn:hover { background-color: #138496; }
+
+.delete-btn { background-color: #dc3545; } /* Red */
+.delete-btn:hover { background-color: #c82333; }
+
+/* Responsive adjustments (basic) */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+    .calendar-container, .todo-container {
+        flex: 1 1 100%; /* Full width on smaller screens */
+        min-width: auto;
+    }
+    .add-todo input[type="text"] {
+        width: calc(100% - 110px); /* Adjust for smaller screens */
+    }
+    h1 { font-size: 2em; }
+    h2 { font-size: 1.5em; }
+}
